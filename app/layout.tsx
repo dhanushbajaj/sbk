@@ -22,7 +22,8 @@ export const metadata: Metadata = {
 };
 
 const NAV_LINKS = [
-  { href: "/", label: "Properties" },
+  { href: "/", label: "Home" },
+  { href: "/properties", label: "Properties" },
   { href: "/pre-construction", label: "Pre-Construction" },
   { href: "/about", label: "About" },
 ];
@@ -34,7 +35,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="site-header">
           <div className="container header-inner">
             <Link href="/" className="brand">
-              <span className="brand-mark">UB</span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="brand-logo" src="/2.png" alt="Uncover Bricks Real Estate logo" />
               <span className="brand-text">
                 Uncover Bricks <em>Ottawa</em>
               </span>

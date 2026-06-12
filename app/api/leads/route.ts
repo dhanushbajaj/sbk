@@ -8,7 +8,16 @@ const PHONE_RE = /^(\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
 const LEADS_FILE = path.join(process.cwd(), "data", "leads.json");
 
 export async function POST(req: Request) {
-  let body: { name?: string; email?: string; phone?: string; website?: string };
+  let body: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    website?: string;
+    message?: string;
+    source?: string;
+    listingId?: string;
+    address?: string;
+  };
   try {
     body = await req.json();
   } catch {
@@ -23,6 +32,10 @@ export async function POST(req: Request) {
   const name = (body.name ?? "").trim();
   const email = (body.email ?? "").trim();
   const phone = (body.phone ?? "").trim();
+  const message = (body.message ?? "").trim().slice(0, 2000);
+  const source = body.source === "listing-inquiry" ? "listing-inquiry" : "pre-construction";
+  const listingId = (body.listingId ?? "").trim().slice(0, 40);
+  const address = (body.address ?? "").trim().slice(0, 200);
 
   if (name.length < 2 || !EMAIL_RE.test(email) || !PHONE_RE.test(phone)) {
     return NextResponse.json({ error: "Validation failed" }, { status: 400 });
@@ -32,7 +45,10 @@ export async function POST(req: Request) {
     name,
     email,
     phone,
-    source: "pre-construction",
+    message,
+    source,
+    listingId,
+    address,
     receivedAt: new Date().toISOString(),
   };
 
@@ -79,6 +95,10 @@ async function sendLeadEmail(lead: {
   name: string;
   email: string;
   phone: string;
+  message: string;
+  source: string;
+  listingId: string;
+  address: string;
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.LEAD_NOTIFY_EMAIL;
@@ -102,8 +122,20 @@ async function sendLeadEmail(lead: {
     body: JSON.stringify({
       from,
       to: [to],
-      subject: `New pre-construction lead: ${lead.name}`,
-      text: `Name: ${lead.name}\nEmail: ${lead.email}\nPhone: ${lead.phone}\nSource: Pre-Construction form`,
+      subject:
+        lead.source === "listing-inquiry"
+          ? `Listing inquiry (MLS® ${lead.listingId}): ${lead.name}`
+          : `New pre-construction lead: ${lead.name}`,
+      text: [
+        `Name: ${lead.name}`,
+        `Email: ${lead.email}`,
+        `Phone: ${lead.phone}`,
+        `Source: ${lead.source}`,
+        lead.listingId && `Listing: MLS® ${lead.listingId} — ${lead.address}`,
+        lead.message && `Message:\n${lead.message}`,
+      ]
+        .filter(Boolean)
+        .join("\n"),
     }),
   });
   if (!res.ok) {

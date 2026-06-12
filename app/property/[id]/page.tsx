@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getListing, getListings } from "@/lib/ddf";
 import { localityOf } from "@/lib/types";
+import InquiryForm from "../../components/InquiryForm";
 
 export const revalidate = 3600;
 
@@ -48,7 +49,7 @@ export default async function PropertyDetailPage({
 
   return (
     <div className="container">
-      <Link href="/" className="back-link">
+      <Link href="/properties" className="back-link">
         ← Back to all listings
       </Link>
 
@@ -118,6 +119,10 @@ export default async function PropertyDetailPage({
       <div className="remarks">
         <h2>About this property</h2>
         <p>{listing.PublicRemarks}</p>
+      </div>
+
+      <div style={{ margin: "34px 0 10px" }}>
+        <InquiryForm listingId={listing.ListingId} address={listing.UnparsedAddress} />
       </div>
 
       {/* CREA display rules: brokerage attribution must accompany every listing */}

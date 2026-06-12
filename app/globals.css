@@ -1,14 +1,15 @@
 :root {
-  --brick: #a8442a;
-  --brick-dark: #863521;
-  --charcoal: #24211e;
-  --ink: #2e2a26;
-  --cream: #f8f4ee;
+  /* Black & white with orange accents — orange sampled from the logo */
+  --brick: #db5807;
+  --brick-dark: #b04504;
+  --charcoal: #0d0d0d;
+  --ink: #1a1a1a;
+  --cream: #f7f7f7;
   --paper: #ffffff;
-  --line: #e5ddd2;
-  --muted: #7c736a;
+  --line: #e4e4e4;
+  --muted: #6e6e6e;
   --radius: 10px;
-  --shadow: 0 2px 10px rgba(36, 33, 30, 0.08);
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 * {
@@ -69,16 +70,11 @@ img { max-width: 100%; display: block; }
   color: #fff;
 }
 
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  background: var(--brick);
-  color: #fff;
-  font-weight: 700;
-  border-radius: 6px;
-  letter-spacing: 0.5px;
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 .brand-text {
@@ -89,7 +85,7 @@ img { max-width: 100%; display: block; }
 
 .brand-text em {
   font-style: normal;
-  color: #e0b9a8;
+  color: #f0905c;
 }
 
 .site-nav {
@@ -112,9 +108,167 @@ img { max-width: 100%; display: block; }
 
 /* ---------- Hero ---------- */
 .hero {
-  background: linear-gradient(160deg, var(--charcoal) 0%, #3d3128 70%, var(--brick-dark) 130%);
+  background: linear-gradient(160deg, #000 0%, #1d1d1d 70%, var(--brick-dark) 160%);
   color: #fff;
   padding: 56px 0 48px;
+}
+
+/* ---------- Landing page ---------- */
+.landing-hero {
+  position: relative;
+  color: #fff;
+  padding: 110px 0 100px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.55) 55%, rgba(13, 13, 13, 0.88) 100%),
+    url("/skyline.jpg") center / cover no-repeat;
+}
+
+.landing-hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  line-height: 1.15;
+  max-width: 720px;
+}
+
+.landing-hero h1 em {
+  font-style: normal;
+  color: var(--brick);
+}
+
+.landing-hero p {
+  margin: 0 0 28px;
+  max-width: 600px;
+  color: #d9d9d9;
+  font-size: 1.05rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-outline {
+  display: inline-block;
+  border: 2px solid #fff;
+  color: #fff;
+  border-radius: 6px;
+  padding: 11px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: transparent;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.btn-solid {
+  display: inline-block;
+  background: var(--brick);
+  color: #fff;
+  border-radius: 6px;
+  padding: 12px 26px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn-solid:hover {
+  background: var(--brick-dark);
+}
+
+.photo-credit {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.photo-credit a {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.section-head {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+}
+
+.section-sub {
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 0 28px;
+}
+
+.accent-bar {
+  width: 56px;
+  height: 4px;
+  background: var(--brick);
+  border-radius: 2px;
+  margin-bottom: 18px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.service-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.service-card .service-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #fdeadd;
+  color: var(--brick);
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.service-card h3 {
+  margin: 0 0 6px;
+  font-size: 1.02rem;
+}
+
+.service-card p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.cta-band {
+  background: var(--charcoal);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 48px;
+}
+
+.cta-band h2 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+}
+
+.cta-band p {
+  margin: 0;
+  color: #bdbdbd;
+  font-size: 0.92rem;
 }
 
 .hero h1 {
@@ -126,7 +280,7 @@ img { max-width: 100%; display: block; }
 .hero p {
   margin: 0;
   max-width: 640px;
-  color: #ddd2c6;
+  color: #cfcfcf;
 }
 
 /* ---------- Demo banner ---------- */
@@ -242,7 +396,7 @@ img { max-width: 100%; display: block; }
 .listing-photo {
   position: relative;
   aspect-ratio: 3 / 2;
-  background: #ddd5ca;
+  background: #dcdcdc;
 }
 
 .listing-photo img {
@@ -255,7 +409,7 @@ img { max-width: 100%; display: block; }
   position: absolute;
   top: 10px;
   left: 10px;
-  background: rgba(36, 33, 30, 0.85);
+  background: rgba(0, 0, 0, 0.82);
   color: #fff;
   font-size: 0.72rem;
   padding: 4px 9px;
@@ -380,14 +534,17 @@ img { max-width: 100%; display: block; }
 
 .form-field label { font-size: 0.85rem; font-weight: 600; }
 
-.form-field input {
+.form-field input,
+.form-field textarea {
   padding: 11px 12px;
   border: 1px solid var(--line);
   border-radius: 6px;
   font-size: 0.95rem;
+  resize: vertical;
 }
 
-.form-field input:focus { outline: 2px solid var(--brick); outline-offset: 1px; border-color: var(--brick); }
+.form-field input:focus,
+.form-field textarea:focus { outline: 2px solid var(--brick); outline-offset: 1px; border-color: var(--brick); }
 
 .field-error { color: #b3261e; font-size: 0.8rem; }
 
@@ -506,7 +663,7 @@ img { max-width: 100%; display: block; }
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--charcoal);
-  color: #cfc6bb;
+  color: #c9c9c9;
   margin-top: 40px;
   font-size: 0.85rem;
 }
@@ -524,11 +681,11 @@ img { max-width: 100%; display: block; }
 
 .footer-brand { color: #fff; font-weight: 600; font-size: 1rem; margin-top: 0; }
 
-.site-footer a { color: #e0b9a8; }
+.site-footer a { color: #f0905c; }
 
-.footer-muted { color: #8d8377; font-size: 0.8rem; }
+.footer-muted { color: #8c8c8c; font-size: 0.8rem; }
 
-.footer-legal p { font-size: 0.75rem; color: #9a9082; line-height: 1.6; }
+.footer-legal p { font-size: 0.75rem; color: #969696; line-height: 1.6; }
 
 .empty-state {
   background: var(--paper);
