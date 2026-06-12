@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { getListing, getListings } from "@/lib/ddf";
 import { localityOf } from "@/lib/types";
 import InquiryForm from "../../components/InquiryForm";
+import PhotoCarousel from "../../components/PhotoCarousel";
 
 export const revalidate = 3600;
 
@@ -45,7 +46,7 @@ export default async function PropertyDetailPage({
   const listing = await getListing(id);
   if (!listing) notFound();
 
-  const [main, ...rest] = [...listing.Media].sort((a, b) => a.Order - b.Order);
+  const media = [...listing.Media].sort((a, b) => a.Order - b.Order);
 
   return (
     <div className="container">
@@ -66,24 +67,7 @@ export default async function PropertyDetailPage({
         <div className="detail-price">{fmtPrice(listing.ListPrice)}</div>
       </div>
 
-      {main && (
-        <div className="gallery">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="main-photo" src={main.MediaURL} alt={listing.UnparsedAddress} />
-          {rest.slice(0, 2).map((m) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img key={m.MediaKey} src={m.MediaURL} alt="" loading="lazy" />
-          ))}
-        </div>
-      )}
-      {rest.length > 2 && (
-        <div className="gallery-rest">
-          {rest.slice(2).map((m) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img key={m.MediaKey} src={m.MediaURL} alt="" loading="lazy" />
-          ))}
-        </div>
-      )}
+      <PhotoCarousel media={media} alt={listing.UnparsedAddress} />
 
       <div className="facts">
         {listing.BedroomsTotal > 0 && (

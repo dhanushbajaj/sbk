@@ -74,9 +74,12 @@ export async function POST(req: Request) {
 
   // 2) Email notification — runs once RESEND_API_KEY is a real key.
   let emailed = false;
+  let emailError = "";
   try {
     emailed = await sendLeadEmail(lead);
+    if (!emailed) emailError = "email-not-configured";
   } catch (err) {
+    emailError = err instanceof Error ? err.message : "email-send-failed";
     console.error("Lead email failed:", err);
   }
 
@@ -84,7 +87,10 @@ export async function POST(req: Request) {
     // No durable destination — surface the failure instead of silently
     // dropping the lead. (Always logged so it appears in host logs.)
     console.error("LEAD NOT PERSISTED — configure Resend env vars:", lead);
-    return NextResponse.json({ error: "Could not record lead" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Could not record lead", reason: emailError },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ ok: true });
@@ -139,7 +145,8 @@ async function sendLeadEmail(lead: {
     }),
   });
   if (!res.ok) {
-    throw new Error(`Resend API returned ${res.status}`);
+    const detail = await res.text().catch(() => "");
+    throw new Error(`Resend API returned ${res.status}: ${detail.slice(0, 300)}`);
   }
   return true;
 }
