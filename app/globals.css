@@ -447,6 +447,13 @@ img { max-width: 100%; display: block; }
   .gallery { grid-template-columns: 1fr; }
 }
 
+.agent-photo {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 420px;
+  width: 100%;
+}
+
 .placeholder-photo {
   background: repeating-linear-gradient(45deg, #e8e0d4, #e8e0d4 12px, #efe8dd 12px, #efe8dd 24px);
   border: 1px dashed #c9bda9;

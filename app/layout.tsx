@@ -65,8 +65,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   @uncoverbricksottawa
                 </a>
               </p>
-              {/* PLACEHOLDER: replace with your brokerage's registered name & address */}
-              <p className="footer-muted">[Your Brokerage Name], Brokerage — [Office Address, Ottawa, ON]</p>
+              <p className="footer-muted">
+                Shreya Bajaj, REALTOR® · <a href="tel:+16137953906">613-795-3906</a> ·{" "}
+                <a href="mailto:ottawarealtorsbk@gmail.com">ottawarealtorsbk@gmail.com</a>
+              </p>
             </div>
             <div className="footer-legal">
               <p>

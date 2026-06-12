@@ -51,30 +51,18 @@ export default function AboutPage() {
                 Follow us on Instagram
               </span>
             </a>
-
-            <div className="placeholder-note">
-              Placeholder: an embedded Instagram feed can be added here later with a service like
-              Behold, LightWidget, or Meta&apos;s oEmbed API (requires a Facebook developer token).
-            </div>
           </div>
 
           <div>
             <h2>Your agent</h2>
-            <div className="placeholder-photo">
-              [Placeholder — add your professional headshot here: /public/agent.jpg]
-            </div>
-            <h3>[Agent Name], REALTOR®</h3>
-            {/* PLACEHOLDER — fill in your real bio and contact details */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="agent-photo" src="/agent.jpg" alt="Shreya Bajaj" />
+            <h3>Shreya Bajaj, REALTOR®</h3>
             <p>
-              [Short bio: years of experience, designations, neighbourhoods of focus, languages
-              spoken, what clients say about working with you.]
-            </p>
-            <p>
-              <strong>Phone:</strong> [613-XXX-XXXX]
+              <strong>Phone:</strong> <a href="tel:+16137953906">613-795-3906</a>
               <br />
-              <strong>Email:</strong> [you@uncoverbricksottawa.ca]
-              <br />
-              <strong>Office:</strong> [Brokerage name and address]
+              <strong>Email:</strong>{" "}
+              <a href="mailto:ottawarealtorsbk@gmail.com">ottawarealtorsbk@gmail.com</a>
             </p>
           </div>
         </div>
