@@ -36,27 +36,50 @@ export async function POST(req: Request) {
     receivedAt: new Date().toISOString(),
   };
 
-  // 1) Always persist locally so no lead is ever lost.
-  await fs.mkdir(path.dirname(LEADS_FILE), { recursive: true });
-  let leads: unknown[] = [];
+  // Two delivery channels; succeed if at least one works.
+  // 1) Local JSON file — works in local/self-hosted deployments. On
+  //    serverless hosts (Vercel) the filesystem is read-only, so this
+  //    is expected to fail there and email becomes the durable channel.
+  let savedToFile = false;
   try {
-    leads = JSON.parse(await fs.readFile(LEADS_FILE, "utf8"));
-  } catch {
-    // first lead — file doesn't exist yet
+    await fs.mkdir(path.dirname(LEADS_FILE), { recursive: true });
+    let leads: unknown[] = [];
+    try {
+      leads = JSON.parse(await fs.readFile(LEADS_FILE, "utf8"));
+    } catch {
+      // first lead — file doesn't exist yet
+    }
+    leads.push(lead);
+    await fs.writeFile(LEADS_FILE, JSON.stringify(leads, null, 2), "utf8");
+    savedToFile = true;
+  } catch (err) {
+    console.warn("Lead file write failed (read-only filesystem?):", err);
   }
-  leads.push(lead);
-  await fs.writeFile(LEADS_FILE, JSON.stringify(leads, null, 2), "utf8");
 
-  // 2) Email notification — AUTH PLACEHOLDER.
-  //    Runs only once RESEND_API_KEY is a real key (see .env.example).
-  await sendLeadEmail(lead).catch((err) =>
-    console.error("Lead email failed (lead is still saved to data/leads.json):", err),
-  );
+  // 2) Email notification — runs once RESEND_API_KEY is a real key.
+  let emailed = false;
+  try {
+    emailed = await sendLeadEmail(lead);
+  } catch (err) {
+    console.error("Lead email failed:", err);
+  }
+
+  if (!savedToFile && !emailed) {
+    // No durable destination — surface the failure instead of silently
+    // dropping the lead. (Always logged so it appears in host logs.)
+    console.error("LEAD NOT PERSISTED — configure Resend env vars:", lead);
+    return NextResponse.json({ error: "Could not record lead" }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }
 
-async function sendLeadEmail(lead: { name: string; email: string; phone: string }) {
+/** Returns true only if a notification email was actually sent. */
+async function sendLeadEmail(lead: {
+  name: string;
+  email: string;
+  phone: string;
+}): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.LEAD_NOTIFY_EMAIL;
   const from = process.env.LEAD_FROM_EMAIL;
@@ -64,10 +87,10 @@ async function sendLeadEmail(lead: { name: string; email: string; phone: string 
   if (!apiKey || apiKey.startsWith("YOUR_") || !to || !from) {
     console.log(
       "[placeholder] Email sending skipped — set RESEND_API_KEY, LEAD_NOTIFY_EMAIL and " +
-        "LEAD_FROM_EMAIL in .env.local to receive lead notifications. New lead:",
+        "LEAD_FROM_EMAIL to receive lead notifications. New lead:",
       lead,
     );
-    return;
+    return false;
   }
 
   const res = await fetch("https://api.resend.com/emails", {
@@ -86,4 +109,5 @@ async function sendLeadEmail(lead: { name: string; email: string; phone: string 
   if (!res.ok) {
     throw new Error(`Resend API returned ${res.status}`);
   }
+  return true;
 }
